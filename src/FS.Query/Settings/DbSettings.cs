@@ -1,16 +1,11 @@
-﻿using FS.Query.Caching;
+﻿using FS.Query.Settings.Caching;
 
 namespace FS.Query.Settings
 {
     public class DbSettings
     {
-        public MapCaching MapCaching { get; set; }
-        public ScriptCaching ScriptCache { get; set; }
-        public Connection Connection { get; set; }
-
-        public DbSettings()
-        {
-
-        }
+        internal MapCaching MapCaching { get; set; } = null!;
+        internal ScriptCaching ScriptCache { get; set; } = null!;
+        internal Connection Connection { get; set; } = null!;
     }
 }

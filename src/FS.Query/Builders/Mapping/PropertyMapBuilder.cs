@@ -1,5 +1,4 @@
-﻿using FS.Query.Mapping;
-using System;
+﻿using FS.Query.Settings.Mapping;
 
 namespace FS.Query.Builders.Mapping
 {
@@ -14,7 +13,7 @@ namespace FS.Query.Builders.Mapping
 
         public PropertyMapBuilder(string name)
         {
-            PropertyMap = new PropertyMap(typeof(TProperty), name);
+            PropertyMap = new PropertyMap(name);
         }
 
         public PropertyMapBuilder<TProperty> WithName(string databaseName)

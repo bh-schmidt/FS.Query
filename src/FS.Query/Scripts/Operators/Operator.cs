@@ -1,20 +1,22 @@
-﻿using FS.Query.Factory.Filters;
+﻿using FS.Query.Scripts.Filters;
+using FS.Query.Settings;
 using System.Text;
+using FS.Query.Scripts.Filters.Comparables;
 
 namespace FS.Query.Scripts.Operators
 {
     public abstract class Operator
     {
-        public abstract StringBuilder Build(Comparable first, Comparable second);
+        public abstract object Build(DbSettings dbSettings, ISqlComparable first, ISqlComparable second);
 
-        public static BooleanOperator And() => new BooleanOperator("AND");
-        public static BooleanOperator Or() => new BooleanOperator("OR");
-        public static BooleanOperator Xor() => new BooleanOperator("XOR");
-        public static BooleanOperator Equal() => new BooleanOperator("=");
-        public static BooleanOperator Different() => new BooleanOperator("<>");
-        public static BooleanOperator GreaterThan() => new BooleanOperator(">");
-        public static BooleanOperator GreaterThanOrEqual() => new BooleanOperator(">=");
-        public static BooleanOperator LessThan() => new BooleanOperator("<");
-        public static BooleanOperator LessThanOrEqual() => new BooleanOperator("<=");
+        public static LogicalConnectiveOperator And => new("AND");
+        public static LogicalConnectiveOperator Or => new("OR");
+        public static LogicalConnectiveOperator Xor => new("XOR");
+        public static BooleanOperator Equal => new("=");
+        public static BooleanOperator Different => new("<>");
+        public static BooleanOperator GreaterThan => new(">");
+        public static BooleanOperator GreaterThanOrEqual => new(">=");
+        public static BooleanOperator LessThan => new("<");
+        public static BooleanOperator LessThanOrEqual => new("<=");
     }
 }

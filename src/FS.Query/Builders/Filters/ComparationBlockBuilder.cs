@@ -1,4 +1,6 @@
-﻿using FS.Query.Factory.Filters;
+﻿using FS.Query.Helpers.Extensions;
+using FS.Query.Scripts.Filters;
+using FS.Query.Settings.Mapping;
 using System;
 using System.Linq.Expressions;
 
@@ -6,12 +8,34 @@ namespace FS.Query.Builders.Filters
 {
     public class ComparationBlockBuilder
     {
-        public ComparationBlock ComparationBlock { get; set; } = new ComparationBlock();
+        private readonly Script script;
 
-        public ComparationBlockBuilder() { }
+        private ComparationNode? lasNode;
+        private LogicalConnectiveBuilder? logicalConnective;
+        private ComparationBlock? comparationBlock;
 
-        public void Column<TTable>(string tableAlias, Expression<Func<TTable, object>> getProperty)
+        public ComparationBlockBuilder(Script script)
         {
+            this.script = script;
+        }
+
+        public LogicalConnectiveBuilder LogicalConnective { get => logicalConnective ??= new(this); }
+        public ComparationBlock ComparationBlock { get => comparationBlock ??= new(); }
+        public ComparationNode? LasNode
+        {
+            get => lasNode;
+            set
+            {
+                lasNode = value;
+                ComparationBlock.ComparationNode ??= value;
+            }
+        }
+
+        public EqualityBuilder Column<TTable>(string tableAlias, Expression<Func<TTable, object?>> getProperty)
+        {
+            var propInfo = getProperty.GetPropertyInfo();
+            var property = new TableProperty(tableAlias, typeof(TTable), propInfo.Name);
+            return new EqualityBuilder(script, this, LogicalConnective, property);
         }
     }
 }

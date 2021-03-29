@@ -1,5 +1,5 @@
-﻿using FS.Query.Caching;
-using FS.Query.Mapping;
+﻿using FS.Query.Settings.Caching;
+using FS.Query.Settings.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,9 +9,12 @@ namespace FS.Query.Settings
 {
     public class DbSettingsBuilder
     {
-        private List<ObjectMap> objectMaps = new List<ObjectMap>();
-        private readonly TimeSpan DefaultInactiveTime = TimeSpan.FromMinutes(10);
-        private readonly DbSettings Settings = new DbSettings();
+        private readonly TimeSpan DefaultInactiveTime = TimeSpan.FromHours(1);
+        private LinkedList<ObjectMap>? objectMaps;
+        private DbSettings? settings = new();
+
+        public LinkedList<ObjectMap> ObjectMaps { get => objectMaps ??= new(); }
+        public DbSettings Settings { get => settings ??= new(); }
 
         public DbSettingsBuilder WithMapCache(TimeSpan maxInactiveTime)
         {
@@ -36,13 +39,12 @@ namespace FS.Query.Settings
             where TMap : class, IMap, new()
         {
             var map = new TMap();
-            if (objectMaps.Any(e => e.Type == typeof(TMap)))
+            if (ObjectMaps.Any(e => e.Type == typeof(TMap)))
                 return this;
 
-            objectMaps.Add(map.ObjectMap);
+            ObjectMaps.AddLast(map.ObjectMap);
 
             return this;
-
         }
 
         public DbSettings Build()
@@ -53,11 +55,12 @@ namespace FS.Query.Settings
             if (Settings.ScriptCache is null)
                 Settings.ScriptCache = new ScriptCaching(true, DefaultInactiveTime);
 
-            objectMaps.ForEach(e => Settings.MapCaching.AddPermanently(e));
+            foreach (var objectMap in ObjectMaps)
+                Settings.MapCaching.AddPermanently(objectMap);
 
             return Settings;
         }
 
-        public static DbSettingsBuilder Create()  => new DbSettingsBuilder();
+        public static DbSettingsBuilder Create() => new();
     }
 }

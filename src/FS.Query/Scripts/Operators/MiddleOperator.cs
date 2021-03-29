@@ -1,5 +1,7 @@
-﻿using FS.Query.Factory.Filters;
+﻿using FS.Query.Scripts.Filters;
+using FS.Query.Settings;
 using System.Text;
+using FS.Query.Scripts.Filters.Comparables;
 
 namespace FS.Query.Scripts.Operators
 {
@@ -12,9 +14,7 @@ namespace FS.Query.Scripts.Operators
 
         public string Operator { get; }
 
-        public override StringBuilder Build(Comparable first, Comparable second)
-        {
-            return new StringBuilder($"{first.Build()} {Operator} {second.Build()}");
-        }
+        public override object Build(DbSettings dbSettings, ISqlComparable first, ISqlComparable second) =>
+            $"{first.Build(dbSettings)} {Operator} {second.Build(dbSettings)}";
     }
 }

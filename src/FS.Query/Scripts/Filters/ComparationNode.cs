@@ -1,39 +1,54 @@
-﻿using FS.Query.Scripts.Operators;
+﻿using FS.Query.Scripts.Filters.Comparables;
+using FS.Query.Scripts.Operators;
+using FS.Query.Settings;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
-namespace FS.Query.Factory.Filters
+namespace FS.Query.Scripts.Filters
 {
     public class ComparationNode
     {
-        public ComparationNode(Comparable first, Operator @operator, Comparable second, BooleanOperator? booleanOperator = null, ComparationNode? nextNode = null)
+        public ComparationNode(ISqlComparable first, Operator @operator, ISqlComparable second)
         {
-            if (booleanOperator is null ^ nextNode is null)
-                throw new ArgumentException($"When setting an {nameof(@operator)} the {nameof(nextNode)} is required and vice-versa.");
-
             First = first;
             Operator = @operator;
             Second = second;
-            BooleanOperator = booleanOperator;
-            NextNode = nextNode;
         }
 
-        public Comparable First { get; set; }
+        public ISqlComparable First { get; set; }
         public Operator Operator { get; set; }
-        public Comparable Second  { get; set; }
-        public BooleanOperator? BooleanOperator { get; }
-        public ComparationNode? NextNode { get; }
+        public ISqlComparable Second { get; set; }
+        public LogicalConnectiveOperator LogicalConnective { get; set; } = Operator.And;
+        public ComparationNode? NextNode { get; set; }
 
-        public StringBuilder Build()
+        public object Build(DbSettings dbSettings)
         {
-            var stringBuilder = Operator.Build(First, Second);
+            var buildedOperator = Operator.Build(dbSettings, First, Second);
 
-            if(BooleanOperator is not null)
-                return NextNode!.Build()
-                    .Append($" {BooleanOperator.Operator} ")
-                    .Append(stringBuilder);
+            if (NextNode is not null)
+            {
+                var buildedNode = NextNode.Build(dbSettings);
+                return new StringBuilder()
+                    .Append(buildedOperator)
+                    .Append($" {LogicalConnective!.Operator} ")
+                    .Append(buildedNode);
+            }
 
-            return stringBuilder;
+            return buildedOperator;
         }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is ComparationNode node &&
+                   EqualityComparer<ISqlComparable>.Default.Equals(First, node.First) &&
+                   EqualityComparer<Operator>.Default.Equals(Operator, node.Operator) &&
+                   EqualityComparer<ISqlComparable>.Default.Equals(Second, node.Second) &&
+                   EqualityComparer<LogicalConnectiveOperator>.Default.Equals(LogicalConnective, node.LogicalConnective) &&
+                   EqualityComparer<ComparationNode?>.Default.Equals(NextNode, node.NextNode);
+        }
+
+        public override int GetHashCode() =>
+            HashCode.Combine(First, Operator, Second, LogicalConnective, NextNode);
     }
 }
