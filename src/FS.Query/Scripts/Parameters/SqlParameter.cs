@@ -1,4 +1,5 @@
-﻿using FS.Query.Scripts.Filters.Comparables;
+﻿using FS.Query.Scripts.Filters;
+using FS.Query.Scripts.Filters.Comparables;
 using FS.Query.Settings;
 
 namespace FS.Query.Scripts.Parameters
@@ -17,12 +18,12 @@ namespace FS.Query.Scripts.Parameters
 
         public object Build(DbSettings dbSettings)
         {
-            if (IsConstant)
-                return BuildParameter(dbSettings);
+            if (IsConstant || GetType() == typeof(ComparationBlock))
+                return BuildAsString(dbSettings);
 
             return scriptParameters.Add(this);
         }
 
-        public abstract object BuildParameter(DbSettings dbSettings);
+        public abstract object BuildAsString(DbSettings dbSettings);
     }
 }

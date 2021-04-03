@@ -3,15 +3,17 @@ using FS.Query.Helpers.Extensions;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using FS.Query.Settings.Mapping;
+using FS.Query.Builders.Mapping;
 
 namespace FS.Query.Settings.Mapping
 {
-    public abstract class Map<TType> : IMap
+    public class TableMap<TType> : ITableMap
         where TType : new()
     {
         public ObjectMap ObjectMap { get; } = new ObjectMap(typeof(TType));
 
-        public Map<TType> TableName(string name)
+        public TableMap<TType> TableName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
@@ -21,7 +23,7 @@ namespace FS.Query.Settings.Mapping
             return this;
         }
 
-        public Map<TType> TableSchema(string schema)
+        public TableMap<TType> TableSchema(string schema)
         {
             if (string.IsNullOrWhiteSpace(schema))
                 throw new ArgumentException($"'{nameof(schema)}' cannot be null or whitespace.", nameof(schema));
@@ -40,7 +42,7 @@ namespace FS.Query.Settings.Mapping
             PropertyMap? propertyMap = ObjectMap.PropertyMaps.FirstOrDefault(e => e.PropertyName == propertyInfo.Name);
             if (propertyMap is null)
             {
-                builder = new PropertyMapBuilder<TProperty>(propertyInfo.Name);
+                builder = new PropertyMapBuilder<TProperty>(propertyInfo.Name, propertyInfo.PropertyType);
                 ObjectMap.PropertyMaps.Add(builder.PropertyMap);
                 return builder;
             }

@@ -4,8 +4,9 @@ namespace FS.Query.Settings
 {
     public class DbSettings
     {
-        internal MapCaching MapCaching { get; set; } = null!;
-        internal ScriptCaching ScriptCache { get; set; } = null!;
-        internal Connection Connection { get; set; } = null!;
+        public virtual Connection Connection { get; set; } = null!;
+        public virtual MapCaching MapCaching { get; set; } = null!;
+        public virtual ScriptCaching ScriptCache { get; set; } = null!;
+        public virtual TypeMap TypeMap { get; set; } = null!;
     }
 }

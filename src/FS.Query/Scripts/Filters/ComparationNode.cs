@@ -25,6 +25,7 @@ namespace FS.Query.Scripts.Filters
         public object Build(DbSettings dbSettings)
         {
             var buildedOperator = Operator.Build(dbSettings, First, Second);
+            SetDbType(dbSettings);
 
             if (NextNode is not null)
             {
@@ -50,5 +51,27 @@ namespace FS.Query.Scripts.Filters
 
         public override int GetHashCode() =>
             HashCode.Combine(First, Operator, Second, LogicalConnective, NextNode);
+
+        private void SetDbType(DbSettings dbSettings)
+        {
+            if (First is ComparableValue comparableValue1 && Second is TableProperty tableProperty2)
+            {
+                comparableValue1.DbType = tableProperty2.DbType;
+                return;
+            }
+
+            if(Second is ComparableValue comparableValue2 && First is TableProperty tableProperty1 )
+            {
+                comparableValue2.DbType = tableProperty1.DbType;
+                return;
+            }
+
+            if(First is ComparableValue comparableValue3 && Second is ComparableValue comparableValue4)
+            {
+                var dbType = dbSettings.TypeMap.GetDbType(comparableValue3.Type);
+                comparableValue3.DbType = dbType;
+                comparableValue4.DbType = dbType;
+            }
+        }
     }
 }

@@ -47,10 +47,13 @@ namespace FS.Query.Settings.Mapping
 
         public string TableFullName { get; set; }
 
-        public void Build()
+        public void Build(DbSettings dbSettings)
         {
             propertiesToColumns = PropertyMaps.ToDictionary(e => e.PropertyName);
-            columnsToProperties = PropertyMaps.ToDictionary(e => e.ColumnName);
+            columnsToProperties = PropertyMaps.ToDictionary(e => e.ColumnName, StringComparer.OrdinalIgnoreCase);
+            
+            foreach (var property in PropertyMaps)
+                property.Build(dbSettings);
         }
 
         public PropertyMap? GetProperty(string propertyName) => propertiesToColumns is not null ? propertiesToColumns.GetValueOrDefault(propertyName) : throw new Exception("The object map was not builded.");

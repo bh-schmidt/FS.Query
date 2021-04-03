@@ -5,7 +5,7 @@ namespace FS.Query.Settings
 {
     public class Connection
     {
-        public Func<IServiceProvider, IDbConnection>? CreateConnection { get; }
+        public virtual Func<IServiceProvider, IDbConnection>? CreateConnection { get; }
 
         public Connection(Func<IServiceProvider, IDbConnection> createConnection)
         {

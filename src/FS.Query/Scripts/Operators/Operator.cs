@@ -12,11 +12,13 @@ namespace FS.Query.Scripts.Operators
         public static LogicalConnectiveOperator And => new("AND");
         public static LogicalConnectiveOperator Or => new("OR");
         public static LogicalConnectiveOperator Xor => new("XOR");
-        public static BooleanOperator Equal => new("=");
-        public static BooleanOperator Different => new("<>");
-        public static BooleanOperator GreaterThan => new(">");
-        public static BooleanOperator GreaterThanOrEqual => new(">=");
-        public static BooleanOperator LessThan => new("<");
-        public static BooleanOperator LessThanOrEqual => new("<=");
+        public static EqualityOperator Equal => new("=");
+        public static EqualityOperator NotEqual => new("<>");
+        public static EqualityOperator In => new("IN");
+        public static EqualityOperator NotIn => new("NOT IN");
+        public static EqualityOperator GreaterThan => new(">");
+        public static EqualityOperator GreaterThanOrEqual => new(">=");
+        public static EqualityOperator LessThan => new("<");
+        public static EqualityOperator LessThanOrEqual => new("<=");
     }
 }

@@ -33,8 +33,8 @@ namespace FS.Query.Scripts.Joins
             {
                 var dictionary = new Dictionary<string, (ITypedSource, ObjectMap)>();
 
-                var firstMap = dbSettings.MapCaching.GetOrCreate(firstSource.Type);
-                var secondMap = dbSettings.MapCaching.GetOrCreate(secondSource.Type);
+                var firstMap = dbSettings.MapCaching.GetOrCreate(firstSource.Type, dbSettings);
+                var secondMap = dbSettings.MapCaching.GetOrCreate(secondSource.Type, dbSettings);
 
                 dictionary.Add(parametersExpressions[0].Name!, (firstSource, firstMap));
                 dictionary.Add(parametersExpressions[1].Name!, (secondSource, secondMap));
@@ -55,7 +55,7 @@ namespace FS.Query.Scripts.Joins
                     firstSource :
                     secondSource;
 
-                var map = dbSettings.MapCaching.GetOrCreate(table.Type);
+                var map = dbSettings.MapCaching.GetOrCreate(table.Type, dbSettings);
                 var propertyMap = map.GetProperty(memberExpression.Member.Name);
 
                 if (propertyMap is null)

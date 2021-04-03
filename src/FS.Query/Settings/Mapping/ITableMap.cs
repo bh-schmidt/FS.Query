@@ -1,6 +1,6 @@
 ﻿namespace FS.Query.Settings.Mapping
 {
-    public interface IMap
+    public interface ITableMap
     {
         ObjectMap ObjectMap { get; }
     }

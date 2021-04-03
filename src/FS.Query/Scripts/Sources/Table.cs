@@ -18,7 +18,7 @@ namespace FS.Query.Scripts.Sources
 
         public override object Build(DbSettings dbSettings)
         {
-            var map = dbSettings.MapCaching.GetOrCreate(Type);
+            var map = dbSettings.MapCaching.GetOrCreate(Type, dbSettings);
             return $"{map.TableFullName} {TreatedAlias}";
         }
 

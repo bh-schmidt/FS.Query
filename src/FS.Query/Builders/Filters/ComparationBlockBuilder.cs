@@ -8,13 +8,13 @@ namespace FS.Query.Builders.Filters
 {
     public class ComparationBlockBuilder
     {
-        private readonly Script script;
+        private readonly SelectionScript script;
 
         private ComparationNode? lasNode;
         private LogicalConnectiveBuilder? logicalConnective;
         private ComparationBlock? comparationBlock;
 
-        public ComparationBlockBuilder(Script script)
+        public ComparationBlockBuilder(SelectionScript script)
         {
             this.script = script;
         }

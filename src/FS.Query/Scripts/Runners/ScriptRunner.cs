@@ -1,76 +1,48 @@
-﻿using FS.Query.Builders;
+﻿using FS.Query.Scripts.Filters;
+using FS.Query.Scripts.Selects;
 using FS.Query.Settings;
-using FS.Query.Settings.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Threading.Tasks;
+using FS.Query.Scripts.Serializations;
 
 namespace FS.Query.Scripts.Runners
 {
-    public static class ScriptRunner
+    public class ScriptRunner<T>
     {
-        public static IEnumerable<T> Run<T>(Script script, DbManager databaseManager)
-            where T : new()
+        private readonly BuildedScript buildedScript;
+        private readonly DbManager databaseManager;
+
+        public ScriptRunner(BuildedScript buildedScript, DbManager databaseManager)
         {
-            var buildedScript = databaseManager
-                .DbSettings
-                .ScriptCache
-                .GetOrCreate(script, databaseManager.DbSettings);
+            this.buildedScript = buildedScript;
+            this.databaseManager = databaseManager;
+        }
 
-            var apply = buildedScript.GetScript(databaseManager.DbSettings, script.ScriptParameters);
+        public T[] GetArray()
+        {
 
-            var connection = databaseManager.GetConnection();
-            var command = connection.CreateCommand();
-
-            command.CommandText = apply;
-            command.CommandTimeout = 30;
-            command.CommandType = CommandType.Text;
+            var connection = databaseManager.Connection;
+            var command = buildedScript.PrepareCommand(databaseManager.DbSettings, buildedScript.ScriptParameters, connection);
 
             var reader = command.ExecuteReader();
-            var result = Read<T>(reader, databaseManager.DbSettings);
+            var result = Read(reader, databaseManager.DbSettings, buildedScript.SelectColumns);
 
             return result.ToArray();
         }
 
-        private static IEnumerable<T> Read<T>(IDataReader reader, DbSettings dbSettings)
-            where T : new()
+        private static IEnumerable<T> Read(IDataReader reader, DbSettings dbSettings, Select[] selectColumns)
         {
-            var propertyMaps = GetPropertyMaps(reader, dbSettings, typeof(T)).ToArray();
-            //var properties = map.PropertyMaps.Where();
+            var scriptSerialization = new ScriptSerialization(typeof(T), selectColumns, reader, dbSettings);
 
+            var serializationType = typeof(T);
 
             while (reader.Read())
             {
-                var obj = new T();
-                for (int i = 0; i < propertyMaps.Length; i++)
-                {
-                    var tuple = propertyMaps[i];
-                    var propertyIndex = tuple.Item1;
-                    var propertyMap = tuple.Item2;
-                    
-                    //propertyMap.
-                    //var propertyMap = script.GetProperty(index);
-                    //propertyMap.Fill(obj, reader, index);
-                }
+                var obj = (T)Activator.CreateInstance(serializationType)!;
+                scriptSerialization.Serialize(reader, obj);
                 yield return obj;
-            }
-        }
-
-        private static IEnumerable<(int, PropertyMap)> GetPropertyMaps(IDataReader reader, DbSettings dbSettings, Type classType)
-        {
-            var columns = new string[reader.FieldCount];
-            for (int i = 0; i < reader.FieldCount; i++)
-                columns[i] = reader.GetName(i);
-
-            var map = dbSettings.MapCaching.GetOrCreate(classType);
-            for (int i = 0; i < columns.Length; i++)
-            {
-                var column = columns[i];
-                var propertyMap = map.GetColumn(column);
-                if (propertyMap is not null)
-                    yield return (i, propertyMap);
             }
         }
     }

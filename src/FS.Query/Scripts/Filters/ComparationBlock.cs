@@ -13,7 +13,7 @@ namespace FS.Query.Scripts.Filters
         public object Build(DbSettings dbSettings)
         {
             if (ComparationNode is null)
-                throw new ArgumentException("The block can't be empty.");
+                throw new ArgumentException("The comparation block can't be empty.");
 
             var buildedNode = ComparationNode.Build(dbSettings);
 

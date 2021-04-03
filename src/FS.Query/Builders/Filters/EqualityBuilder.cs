@@ -4,17 +4,19 @@ using FS.Query.Scripts.Operators;
 using System;
 using System.Linq.Expressions;
 using FS.Query.Scripts.Filters.Comparables;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FS.Query.Builders.Filters
 {
     public class EqualityBuilder
     {
-        private readonly Script script;
+        private readonly SelectionScript script;
         private readonly ComparationBlockBuilder comparationBlockBuilder;
         private readonly LogicalConnectiveBuilder logicalConnectiveBuilder;
         private readonly ISqlComparable fistComparable;
 
-        public EqualityBuilder(Script script, ComparationBlockBuilder comparationBlockBuilder, LogicalConnectiveBuilder logicalConnectiveBuilder, ISqlComparable fistComparable)
+        public EqualityBuilder(SelectionScript script, ComparationBlockBuilder comparationBlockBuilder, LogicalConnectiveBuilder logicalConnectiveBuilder, ISqlComparable fistComparable)
         {
             this.script = script;
             this.comparationBlockBuilder = comparationBlockBuilder;
@@ -37,9 +39,25 @@ namespace FS.Query.Builders.Filters
             return logicalConnectiveBuilder;
         }
 
-        public LogicalConnectiveBuilder Different<TTable>(string alias, Expression<Func<TTable, object?>> getProperty)
+        public LogicalConnectiveBuilder In<TValues>(IEnumerable<TValues> values, bool isConstant = false)
         {
-            AddOperator(alias, getProperty, Operator.Different);
+            var comparable = new ComparableEnumerable(script.ScriptParameters, isConstant, values.Cast<object>());
+            var node = new ComparationNode(fistComparable, Operator.In, comparable);
+            SetNode(node);
+            return logicalConnectiveBuilder;
+        }
+
+        public LogicalConnectiveBuilder NotIn<TValues>(IEnumerable<TValues> values, bool isConstant = false)
+        {
+            var comparable = new ComparableEnumerable(script.ScriptParameters, isConstant, values.Cast<object>());
+            var node = new ComparationNode(fistComparable, Operator.NotIn, comparable);
+            SetNode(node);
+            return logicalConnectiveBuilder;
+        }
+
+        public LogicalConnectiveBuilder NotEqual<TTable>(string alias, Expression<Func<TTable, object?>> getProperty)
+        {
+            AddOperator(alias, getProperty, Operator.NotEqual);
             return logicalConnectiveBuilder;
         }
 
@@ -67,7 +85,7 @@ namespace FS.Query.Builders.Filters
             return logicalConnectiveBuilder;
         }
 
-        private void AddOperator<TTable>(string alias, Expression<Func<TTable, object?>> getProperty, BooleanOperator booleanOperator)
+        private void AddOperator<TTable>(string alias, Expression<Func<TTable, object?>> getProperty, EqualityOperator booleanOperator)
         {
             var propInfo = getProperty.GetPropertyInfo();
             var property = new TableProperty(alias, typeof(TTable), propInfo.Name);

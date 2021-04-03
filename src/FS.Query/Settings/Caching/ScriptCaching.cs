@@ -16,7 +16,7 @@ namespace FS.Query.Settings.Caching
             this.maxInactiveTime = maxInactiveTime;
         }
 
-        public BuildedScript GetOrCreate(Script script, DbSettings dbSettings)
+        public BuildedScript GetOrCreate(SelectionScript script, DbSettings dbSettings)
         {
             if (!enableCaching)
                 return script.Build(dbSettings);

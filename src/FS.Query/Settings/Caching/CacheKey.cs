@@ -1,9 +1,9 @@
-﻿using FS.Query.Scripts;
-using FS.Query.Scripts.Combinations;
+﻿using FS.Query.Scripts.Combinations;
 using FS.Query.Scripts.Filters;
-using FS.Query.Scripts.Joins;
+using FS.Query.Scripts.Selects;
 using FS.Query.Scripts.Sources;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FS.Query.Settings.Caching
@@ -11,42 +11,45 @@ namespace FS.Query.Settings.Caching
     public struct CacheKey
     {
         private readonly ISource source;
-        private readonly Combination[] combinations;
-        private readonly IScriptColumn[] columns;
-        private readonly ComparationBlock[] comparationBlocks;
+        private readonly IEnumerable<Combination> combinations;
+        private readonly IEnumerable<Select> selectColumns;
+        private readonly IEnumerable<ComparationBlock> comparationBlocks;
+        private readonly long limit;
         private readonly int hashCode;
 
         public CacheKey(
             ISource source,
-            Combination[] combination,
-            IScriptColumn[] properties,
-            ComparationBlock[] comparationBlocks)
+            IEnumerable<Combination> combinations,
+            IEnumerable<Select> selectColumns,
+            IEnumerable<ComparationBlock> comparationBlocks,
+            long limit)
         {
             this.source = source;
-            this.combinations = combination;
-            this.columns = properties;
+            this.combinations = combinations;
+            this.selectColumns = selectColumns;
             this.comparationBlocks = comparationBlocks;
-            hashCode = CreateHashCode(source, combinations, columns, comparationBlocks);
+            this.limit = limit;
+            hashCode = CreateHashCode(source, this.combinations, this.selectColumns, comparationBlocks, limit);
         }
 
         public override bool Equals(object? obj)
         {
-            if (obj is null || obj is not CacheKey cacheKey || cacheKey.source != source) return false;
+            if (obj is null || obj is not CacheKey cacheKey || cacheKey.source != source || cacheKey.limit != limit) return false;
 
             return
                 combinations.SequenceEqual(cacheKey.combinations) &&
-                columns.SequenceEqual(cacheKey.columns) &&
+                selectColumns.SequenceEqual(cacheKey.selectColumns) &&
                 comparationBlocks.SequenceEqual(cacheKey.comparationBlocks);
         }
 
         public override int GetHashCode() => hashCode;
 
-        private static int CreateHashCode(object fromId, Combination[] combinations, IScriptColumn[] properties, ComparationBlock[] comparationBlocks)
+        private static int CreateHashCode(object fromId, IEnumerable<Combination> combinations, IEnumerable<Select> selectColumns, IEnumerable<ComparationBlock> comparationBlocks, long limit)
         {
-            int hash = fromId.GetHashCode();
+            int hash = HashCode.Combine(fromId, limit);
 
             foreach (var combination in combinations) hash = HashCode.Combine(hash, combination);
-            foreach (var property in properties) hash = HashCode.Combine(hash, property);
+            foreach (var column in selectColumns) hash = HashCode.Combine(hash, column);
             foreach (var comparationBlock in comparationBlocks) hash = HashCode.Combine(hash, comparationBlock);
 
             return hash;

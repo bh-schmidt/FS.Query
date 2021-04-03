@@ -14,32 +14,32 @@ namespace FS.Query.Settings.Caching
             this.objectMapMaxInactiveTime = objectMapMaxInactiveTime;
         }
 
-        public void AddPermanently(ObjectMap objectMap)
+        public void AddPermanently(ObjectMap objectMap, DbSettings dbSettings)
         {
-            objectMap.Build();
+            objectMap.Build(dbSettings);
             memoryCache.Set(objectMap.Type, objectMap, new MemoryCacheEntryOptions { Priority = CacheItemPriority.NeverRemove });
         }
 
-        public ObjectMap GetOrCreate(Type type) =>
+        public ObjectMap GetOrCreate(Type type, DbSettings dbSettings) =>
             memoryCache.GetOrCreate(
                 type,
                 entry =>
                 {
                     entry.SlidingExpiration = objectMapMaxInactiveTime;
-                    return CreateObjectMap(type);
+                    return CreateObjectMap(type, dbSettings);
                 });
 
-        private static ObjectMap CreateObjectMap(Type type)
+        private static ObjectMap CreateObjectMap(Type type, DbSettings dbSettings)
         {
             var map = new ObjectMap(type);
 
             foreach (var property in type.GetProperties())
             {
-                var propertyMap = new PropertyMap(property.Name);
+                var propertyMap = new PropertyMap(property.Name, property.PropertyType);
                 map.PropertyMaps.Add(propertyMap);
             }
 
-            map.Build();
+            map.Build(dbSettings);
             return map;
         }
     }

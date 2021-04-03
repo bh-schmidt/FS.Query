@@ -22,37 +22,41 @@ namespace FS.Query
 
         public DbSettings DbSettings { get; }
 
-        public TableSelectBuilder<TTable> FromTable<TTable>(string alias) where TTable : new()
+        public SelectionByTableBuilder<TTable> FromTable<TTable>(string alias)
         {
             var table = new Table(typeof(TTable), alias);
-            var script = new Script(table);
-            return new TableSelectBuilder<TTable>(table, script, this);
+            var script = new SelectionScript(table);
+            return new SelectionByTableBuilder<TTable>(table, script, this);
         }
 
-        public IDbConnection GetConnection()
+        public SelectionByScriptInjectionBuilder FromScript(string alias, string injection)
         {
-            if (DbSettings.Connection.CreateConnection is null)
-                throw new ArgumentException("The function to create connection wasn't set.");
-
-            dbConnection ??= DbSettings.Connection.CreateConnection.Invoke(serviceProvider);
-
-            if (dbConnection.State == ConnectionState.Closed)
-                dbConnection.Open();
-
-            return dbConnection;
+            var scriptInjection = new ScriptInjection(alias, injection);
+            var script = new SelectionScript(scriptInjection);
+            return new SelectionByScriptInjectionBuilder(scriptInjection, script, this);
         }
 
-        public IDbConnection GetUniqueConnection()
+        public IDbConnection Connection => dbConnection ??= CreateConnection();
+
+        public IDbConnection UniqueConnection
         {
-            if (DbSettings.Connection.CreateConnection is null)
+            get
+            {
+                var connection = CreateConnection();
+                uniqueConnections.AddLast(connection);
+                return connection;
+            }
+        }
+
+        private IDbConnection CreateConnection()
+        {
+            if (DbSettings?.Connection?.CreateConnection is null)
                 throw new ArgumentException("The function to create connection wasn't set.");
 
-            var connection = DbSettings.Connection.CreateConnection.Invoke(serviceProvider);
+            var connection = DbSettings.Connection.CreateConnection(serviceProvider);
 
             if (connection.State == ConnectionState.Closed)
                 connection.Open();
-
-            uniqueConnections.AddLast(connection);
 
             return connection;
         }

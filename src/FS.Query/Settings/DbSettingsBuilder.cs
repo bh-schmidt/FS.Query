@@ -36,7 +36,7 @@ namespace FS.Query.Settings
         }
 
         public DbSettingsBuilder Map<TMap>()
-            where TMap : class, IMap, new()
+            where TMap : class, ITableMap, new()
         {
             var map = new TMap();
             if (ObjectMaps.Any(e => e.Type == typeof(TMap)))
@@ -55,8 +55,11 @@ namespace FS.Query.Settings
             if (Settings.ScriptCache is null)
                 Settings.ScriptCache = new ScriptCaching(true, DefaultInactiveTime);
 
+            if (Settings.TypeMap is null)
+                Settings.TypeMap = new TypeMap();
+
             foreach (var objectMap in ObjectMaps)
-                Settings.MapCaching.AddPermanently(objectMap);
+                Settings.MapCaching.AddPermanently(objectMap, Settings);
 
             return Settings;
         }
