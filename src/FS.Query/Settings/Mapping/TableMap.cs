@@ -3,8 +3,6 @@ using FS.Query.Helpers.Extensions;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using FS.Query.Settings.Mapping;
-using FS.Query.Builders.Mapping;
 
 namespace FS.Query.Settings.Mapping
 {

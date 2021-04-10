@@ -1,4 +1,5 @@
-﻿using FS.Query.Settings.Caching;
+﻿using FS.Query.Settings.Builders;
+using FS.Query.Settings.Caching;
 using FS.Query.Settings.Mapping;
 using System;
 using System.Collections.Generic;
@@ -16,26 +17,26 @@ namespace FS.Query.Settings
         public LinkedList<ObjectMap> ObjectMaps { get => objectMaps ??= new(); }
         public DbSettings Settings { get => settings ??= new(); }
 
-        public DbSettingsBuilder WithMapCache(TimeSpan maxInactiveTime)
+        public virtual DbSettingsBuilder WithMapCache(TimeSpan maxInactiveTime)
         {
             Settings.MapCaching = new MapCaching(maxInactiveTime);
             return this;
         }
 
-        public DbSettingsBuilder WithConnection(Func<IServiceProvider, IDbConnection> createConnection)
+        public virtual DbSettingsBuilder WithConnection(Func<IServiceProvider, IDbConnection> createConnection)
         {
             Settings.Connection = new Connection(createConnection);
             return this;
         }
 
-        public DbSettingsBuilder WithScriptCache(bool enable = true, TimeSpan? maxInactiveTime = null)
+        public virtual DbSettingsBuilder WithScriptCache(bool enable = true, TimeSpan? maxInactiveTime = null)
         {
             maxInactiveTime ??= DefaultInactiveTime;
             Settings.ScriptCache = new ScriptCaching(enable, maxInactiveTime.Value);
             return this;
         }
 
-        public DbSettingsBuilder Map<TMap>()
+        public virtual DbSettingsBuilder Map<TMap>()
             where TMap : class, ITableMap, new()
         {
             var map = new TMap();
@@ -47,7 +48,7 @@ namespace FS.Query.Settings
             return this;
         }
 
-        public DbSettings Build()
+        public virtual DbSettings Build()
         {
             if (Settings.MapCaching is null)
                 Settings.MapCaching = new MapCaching(DefaultInactiveTime);
@@ -55,8 +56,11 @@ namespace FS.Query.Settings
             if (Settings.ScriptCache is null)
                 Settings.ScriptCache = new ScriptCaching(true, DefaultInactiveTime);
 
-            if (Settings.TypeMap is null)
-                Settings.TypeMap = new TypeMap();
+            if (Settings.TypeMapping is null)
+                Settings.TypeMapping = new TypeMapping();
+
+            if (Settings.ScriptBuilder is null)
+                Settings.ScriptBuilder = new ScriptBuilder();
 
             foreach (var objectMap in ObjectMaps)
                 Settings.MapCaching.AddPermanently(objectMap, Settings);

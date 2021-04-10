@@ -1,4 +1,4 @@
-﻿using FS.Query.Scripts.Operators;
+﻿using FS.Query.Scripts.SelectionScripts.Operators;
 
 namespace FS.Query.Builders.Filters
 {
@@ -13,24 +13,24 @@ namespace FS.Query.Builders.Filters
 
         public ComparationBlockBuilder And()
         {
-            if (comparationBlockBuilder.LasNode is not null)
-                comparationBlockBuilder.LasNode.LogicalConnective = Operator.And;
+            if (comparationBlockBuilder.LastNode is not null)
+                comparationBlockBuilder.LastNode.LogicalConnective = Operator.And;
 
             return comparationBlockBuilder;
         }
 
         public ComparationBlockBuilder Or()
         {
-            if (comparationBlockBuilder.LasNode is not null)
-                comparationBlockBuilder.LasNode.LogicalConnective = Operator.Or;
+            if (comparationBlockBuilder.LastNode is not null)
+                comparationBlockBuilder.LastNode.LogicalConnective = Operator.Or;
 
             return comparationBlockBuilder;
         }
 
         public ComparationBlockBuilder Xor()
         {
-            if (comparationBlockBuilder.LasNode is not null)
-                comparationBlockBuilder.LasNode.LogicalConnective = Operator.Xor;
+            if (comparationBlockBuilder.LastNode is not null)
+                comparationBlockBuilder.LastNode.LogicalConnective = Operator.Xor;
 
             return comparationBlockBuilder;
         }

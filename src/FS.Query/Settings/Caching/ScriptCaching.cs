@@ -1,4 +1,4 @@
-﻿using FS.Query.Scripts;
+﻿using FS.Query.Scripts.SelectionScripts;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 
@@ -6,7 +6,7 @@ namespace FS.Query.Settings.Caching
 {
     public class ScriptCaching
     {
-        private readonly MemoryCache memoryCache = new MemoryCache(new MemoryCacheOptions { });
+        private readonly MemoryCache memoryCache = new(new MemoryCacheOptions { });
         private readonly bool enableCaching;
         private readonly TimeSpan maxInactiveTime;
 
@@ -16,19 +16,19 @@ namespace FS.Query.Settings.Caching
             this.maxInactiveTime = maxInactiveTime;
         }
 
-        public BuildedScript GetOrCreate(SelectionScript script, DbSettings dbSettings)
+        public virtual BuildedScript GetOrCreate(SelectionScript selectionScript, DbSettings dbSettings)
         {
             if (!enableCaching)
-                return script.Build(dbSettings);
+                return selectionScript.Build(dbSettings);
 
-            var cacheKey = script.GetKey();
+            var cacheKey = selectionScript.GetKey();
 
             return memoryCache.GetOrCreate(
                 cacheKey,
                 entry =>
                 {
                     entry.SlidingExpiration = maxInactiveTime;
-                    return script.Build(dbSettings);
+                    return selectionScript.Build(dbSettings);
                 });
         }
     }

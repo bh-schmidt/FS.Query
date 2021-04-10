@@ -1,7 +1,7 @@
-﻿using FS.Query.Scripts.Combinations;
-using FS.Query.Scripts.Filters;
-using FS.Query.Scripts.Selects;
-using FS.Query.Scripts.Sources;
+﻿using FS.Query.Scripts.SelectionScripts.Combinations;
+using FS.Query.Scripts.SelectionScripts.Filters;
+using FS.Query.Scripts.SelectionScripts.Selects;
+using FS.Query.Scripts.SelectionScripts.Sources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,5 +54,8 @@ namespace FS.Query.Settings.Caching
 
             return hash;
         }
+
+        public static bool operator ==(CacheKey left, CacheKey right) => left.Equals(right);
+        public static bool operator !=(CacheKey left, CacheKey right) => !(left == right);
     }
 }

@@ -1,9 +1,4 @@
-using FS.Query.Settings;
-using FS.Query.Settings.Mapping;
-using FS.Query.Tests.Shared;
 using NUnit.Framework;
-using System;
-using System.Data.SqlClient;
 
 namespace FS.Query.Tests
 {

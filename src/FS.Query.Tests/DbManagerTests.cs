@@ -115,7 +115,7 @@ namespace FS.Query.Tests
         public void Will_create_a_script_injection_builder()
         {
             var result = dbManager.FromScript("p", "SELECT * FROM [USER]");
-            Assert.IsInstanceOf<SelectionByScriptInjectionBuilder>(result);
+            Assert.IsInstanceOf<SelectionBuilder>(result);
         }
     }
 }

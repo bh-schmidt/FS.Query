@@ -1,7 +1,6 @@
 ﻿using FS.Query.Settings.Mapping;
 using FS.Query.Tests.Shared;
 using NUnit.Framework;
-using FS.Query.Builders.Mapping;
 
 namespace FS.Query.Tests.Settings.Mapping
 {
@@ -35,15 +34,15 @@ namespace FS.Query.Tests.Settings.Mapping
         [Test]
         public void Will_add_a_new_property()
         {
-            tableMap.Property(e => e.Id); 
+            tableMap.Property(e => e.Id);
             Assert.AreEqual(1, tableMap.ObjectMap.PropertyMaps.Count);
         }
 
         [Test]
         public void Will_ignore_the_second_property()
         {
-            tableMap.Property(e => e.Id); 
-            tableMap.Property(e => e.Id); 
+            tableMap.Property(e => e.Id);
+            tableMap.Property(e => e.Id);
             Assert.AreEqual(1, tableMap.ObjectMap.PropertyMaps.Count);
         }
     }

@@ -1,5 +1,4 @@
 ﻿using FS.Query.Settings.Mapping;
-using FS.Query.Builders.Mapping;
 
 namespace FS.Query.Tests.Shared
 {

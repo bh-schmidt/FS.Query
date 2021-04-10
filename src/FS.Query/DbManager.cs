@@ -1,6 +1,7 @@
 ﻿using FS.Query.Builders;
 using FS.Query.Helpers;
-using FS.Query.Scripts.Sources;
+using FS.Query.Scripts.SelectionScripts;
+using FS.Query.Scripts.SelectionScripts.Sources;
 using FS.Query.Settings;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace FS.Query
     {
         private readonly IServiceProvider serviceProvider;
         private IDbConnection? dbConnection;
-        private LinkedList<IDbConnection> uniqueConnections = new();
+        private LinkedList<IDbConnection>? uniqueConnections;
 
         public DbManager(DbSettings dbSettings, IServiceProvider serviceProvider)
         {
@@ -25,15 +26,15 @@ namespace FS.Query
         public SelectionByTableBuilder<TTable> FromTable<TTable>(string alias)
         {
             var table = new Table(typeof(TTable), alias);
-            var script = new SelectionScript(table);
-            return new SelectionByTableBuilder<TTable>(table, script, this);
+            var selectionScript = new SelectionScript(table);
+            return new SelectionByTableBuilder<TTable>(table, selectionScript, this);
         }
 
-        public SelectionByScriptInjectionBuilder FromScript(string alias, string injection)
+        public SelectionBuilder FromScript(string alias, string injection)
         {
             var scriptInjection = new ScriptInjection(alias, injection);
-            var script = new SelectionScript(scriptInjection);
-            return new SelectionByScriptInjectionBuilder(scriptInjection, script, this);
+            var selectionScript = new SelectionScript(scriptInjection);
+            return new SelectionBuilder(scriptInjection, selectionScript, this);
         }
 
         public IDbConnection Connection => dbConnection ??= CreateConnection();
@@ -43,6 +44,7 @@ namespace FS.Query
             get
             {
                 var connection = CreateConnection();
+                uniqueConnections ??= new();
                 uniqueConnections.AddLast(connection);
                 return connection;
             }
@@ -65,15 +67,18 @@ namespace FS.Query
         {
             Try.Execute(() => dbConnection?.Dispose());
 
-            foreach (var connection in uniqueConnections)
-                Try.Execute(() => connection?.Dispose());
+            if (uniqueConnections is not null)
+                foreach (var connection in uniqueConnections)
+                    Try.Execute(() => connection?.Dispose());
+
+            GC.SuppressFinalize(this);
         }
 
         ~DbManager()
         {
             Dispose();
             dbConnection = null;
-            uniqueConnections.Clear();
+            uniqueConnections = null;
         }
     }
 }

@@ -1,5 +1,6 @@
-﻿using FS.Query.Scripts.Joins;
-using FS.Query.Scripts.Sources;
+﻿using FS.Query.Scripts.SelectionScripts;
+using FS.Query.Scripts.SelectionScripts.Combinations.Joins;
+using FS.Query.Scripts.SelectionScripts.Sources;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -8,13 +9,13 @@ namespace FS.Query.Builders
 {
     public class SelectionByTableBuilder<TTable> : SelectionBuilder
     {
-        private readonly SelectionScript script;
+        private readonly SelectionScript selectionScript;
         private readonly Table table;
         private readonly DbManager dbManager;
 
-        public SelectionByTableBuilder(Table table, SelectionScript script, DbManager dbManager) : base(table, script, dbManager)
+        public SelectionByTableBuilder(Table table, SelectionScript selectionScript, DbManager dbManager) : base(table, selectionScript, dbManager)
         {
-            this.script = script;
+            this.selectionScript = selectionScript;
             this.table = table;
             this.dbManager = dbManager;
         }
@@ -23,8 +24,8 @@ namespace FS.Query.Builders
         {
             var joinTable = new Table(typeof(TJoinType), alias);
             var join = new ExpressionJoin(table, joinTable, where.Parameters.ToArray(), where.Body);
-            script.Combinations.AddLast(join);
-            return new SelectionByTableBuilder<TJoinType>(joinTable, script, dbManager);
+            selectionScript.Combinations.AddLast(join);
+            return new SelectionByTableBuilder<TJoinType>(joinTable, selectionScript, dbManager);
         }
     }
 }

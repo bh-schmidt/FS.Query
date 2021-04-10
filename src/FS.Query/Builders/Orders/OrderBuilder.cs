@@ -1,6 +1,7 @@
 ﻿using FS.Query.Helpers.Extensions;
-using FS.Query.Scripts.Filters;
-using FS.Query.Scripts.Orders;
+using FS.Query.Scripts.SelectionScripts;
+using FS.Query.Scripts.SelectionScripts.Filters;
+using FS.Query.Scripts.SelectionScripts.Orders;
 using System;
 using System.Linq.Expressions;
 
@@ -8,11 +9,11 @@ namespace FS.Query.Builders.Orders
 {
     public class OrderBuilder
     {
-        private readonly SelectionScript script;
+        private readonly SelectionScript selectionScript;
 
-        public OrderBuilder(SelectionScript script)
+        public OrderBuilder(SelectionScript selectionScript)
         {
-            this.script = script;
+            this.selectionScript = selectionScript;
         }
 
         public OrderBuilder Column<TTable>(string tableAlias, Expression<Func<TTable, object?>> property, bool descending = false)
@@ -20,7 +21,7 @@ namespace FS.Query.Builders.Orders
             var propertyInfo = property.GetPropertyInfo();
             var tableProperty = new TableProperty(tableAlias, typeof(TTable), propertyInfo.Name);
             var columnOrder = new ColumnOrder(tableProperty, descending);
-            script.Orders.AddLast(columnOrder);
+            selectionScript.Orders.AddLast(columnOrder);
             return this;
         }
     }

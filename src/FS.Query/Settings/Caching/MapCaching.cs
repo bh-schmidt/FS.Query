@@ -20,7 +20,7 @@ namespace FS.Query.Settings.Caching
             memoryCache.Set(objectMap.Type, objectMap, new MemoryCacheEntryOptions { Priority = CacheItemPriority.NeverRemove });
         }
 
-        public ObjectMap GetOrCreate(Type type, DbSettings dbSettings) =>
+        public virtual ObjectMap GetOrCreate(Type type, DbSettings dbSettings) =>
             memoryCache.GetOrCreate(
                 type,
                 entry =>

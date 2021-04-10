@@ -27,7 +27,7 @@ namespace FS.Query.Settings.Mapping
             get => tableSchema;
             set
             {
-                var trim = value.Trim("[]".ToArray());
+                var trim = value.Trim("[] ".ToArray());
                 tableSchema = trim;
 
                 TableFullName = GetTableFullName();
@@ -38,20 +38,20 @@ namespace FS.Query.Settings.Mapping
             get => tableName;
             set
             {
-                var trim = value.Trim("[]".ToArray());
+                var trim = value.Trim("[] ".ToArray());
                 tableName = trim;
 
                 TableFullName = GetTableFullName();
             }
         }
 
-        public string TableFullName { get; set; }
+        public string TableFullName { get; private set; }
 
         public void Build(DbSettings dbSettings)
         {
             propertiesToColumns = PropertyMaps.ToDictionary(e => e.PropertyName);
             columnsToProperties = PropertyMaps.ToDictionary(e => e.ColumnName, StringComparer.OrdinalIgnoreCase);
-            
+
             foreach (var property in PropertyMaps)
                 property.Build(dbSettings);
         }

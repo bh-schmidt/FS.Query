@@ -1,6 +1,6 @@
 ﻿using FS.Query.Helpers.Extensions;
-using FS.Query.Scripts.Filters;
-using FS.Query.Settings.Mapping;
+using FS.Query.Scripts.SelectionScripts;
+using FS.Query.Scripts.SelectionScripts.Filters;
 using System;
 using System.Linq.Expressions;
 
@@ -8,20 +8,20 @@ namespace FS.Query.Builders.Filters
 {
     public class ComparationBlockBuilder
     {
-        private readonly SelectionScript script;
+        private readonly SelectionScript selectionScript;
 
         private ComparationNode? lasNode;
         private LogicalConnectiveBuilder? logicalConnective;
         private ComparationBlock? comparationBlock;
 
-        public ComparationBlockBuilder(SelectionScript script)
+        public ComparationBlockBuilder(SelectionScript selectionScript)
         {
-            this.script = script;
+            this.selectionScript = selectionScript;
         }
 
-        public LogicalConnectiveBuilder LogicalConnective { get => logicalConnective ??= new(this); }
-        public ComparationBlock ComparationBlock { get => comparationBlock ??= new(); }
-        public ComparationNode? LasNode
+        public virtual LogicalConnectiveBuilder LogicalConnective { get => logicalConnective ??= new(this); }
+        public virtual ComparationBlock ComparationBlock { get => comparationBlock ??= new(); }
+        public virtual ComparationNode? LastNode
         {
             get => lasNode;
             set
@@ -35,7 +35,7 @@ namespace FS.Query.Builders.Filters
         {
             var propInfo = getProperty.GetPropertyInfo();
             var property = new TableProperty(tableAlias, typeof(TTable), propInfo.Name);
-            return new EqualityBuilder(script, this, LogicalConnective, property);
+            return new EqualityBuilder(selectionScript, this, LogicalConnective, property);
         }
     }
 }

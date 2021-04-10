@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 
 namespace FS.Query.Settings.Mapping
@@ -33,14 +32,16 @@ namespace FS.Query.Settings.Mapping
         public string TreatedColumnName { get; private set; } = "";
         public DbType DbType { get => dbType ?? throw new Exception("PropertyMap not builded."); set => dbType = value; }
 
-        public void Build(DbSettings dbSettings)
+        public virtual void Build(DbSettings dbSettings)
         {
-            if (dbType is not null)
-                DbType = dbSettings.TypeMap.GetDbType(PropertyType);
+            dbType ??= dbSettings.TypeMapping.GetDbType(PropertyType).DbType;
         }
 
         public void SetValue(object obj, object value)
         {
+            if (obj is null || value is null)
+                return;
+
             var propInfo = obj.GetType().GetProperty(PropertyName);
             if (propInfo is null)
                 throw new ArgumentException($"The object doesn't contains the property {PropertyName}.");
