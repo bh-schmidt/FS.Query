@@ -1,9 +1,8 @@
-﻿using FS.Query.Scripts.SelectionScripts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 
-namespace FS.Query.Settings.Caching
+namespace FS.Query.Settings.Conversions
 {
     public static class DefaultTypeMap
     {

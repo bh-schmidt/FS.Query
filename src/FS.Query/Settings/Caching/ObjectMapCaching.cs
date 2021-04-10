@@ -4,12 +4,12 @@ using System;
 
 namespace FS.Query.Settings.Caching
 {
-    public class MapCaching
+    public class ObjectMapCaching
     {
         private readonly IMemoryCache memoryCache = new MemoryCache(new MemoryCacheOptions());
         private readonly TimeSpan objectMapMaxInactiveTime;
 
-        public MapCaching(TimeSpan objectMapMaxInactiveTime)
+        public ObjectMapCaching(TimeSpan objectMapMaxInactiveTime)
         {
             this.objectMapMaxInactiveTime = objectMapMaxInactiveTime;
         }

@@ -1,5 +1,6 @@
 ﻿using FS.Query.Settings.Builders;
 using FS.Query.Settings.Caching;
+using FS.Query.Settings.Conversions;
 using FS.Query.Settings.Mapping;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace FS.Query.Settings
 
         public virtual DbSettingsBuilder WithMapCache(TimeSpan maxInactiveTime)
         {
-            Settings.MapCaching = new MapCaching(maxInactiveTime);
+            Settings.MapCaching = new ObjectMapCaching(maxInactiveTime);
             return this;
         }
 
@@ -51,7 +52,7 @@ namespace FS.Query.Settings
         public virtual DbSettings Build()
         {
             if (Settings.MapCaching is null)
-                Settings.MapCaching = new MapCaching(DefaultInactiveTime);
+                Settings.MapCaching = new ObjectMapCaching(DefaultInactiveTime);
 
             if (Settings.ScriptCache is null)
                 Settings.ScriptCache = new ScriptCaching(true, DefaultInactiveTime);

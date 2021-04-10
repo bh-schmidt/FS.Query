@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FS.Query.Settings.Caching
+namespace FS.Query.Settings.Conversions
 {
     public class TypeMapping
     {

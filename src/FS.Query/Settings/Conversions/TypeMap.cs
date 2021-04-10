@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 
-namespace FS.Query.Settings.Caching
+namespace FS.Query.Settings.Conversions
 {
     public class TypeMap
     {
