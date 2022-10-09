@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using FS.Query.Scripts.Columns;
 
 namespace FS.Query.Builders.Filters
 {
@@ -134,8 +135,8 @@ namespace FS.Query.Builders.Filters
         private void AddOperator<TTable>(string alias, Expression<Func<TTable, object?>> getProperty, EqualityOperator booleanOperator)
         {
             var propInfo = getProperty.GetPropertyInfo();
-            var property = new TableProperty(alias, typeof(TTable), propInfo.Name);
-            var node = new ComparationNode(fistComparable, booleanOperator, property);
+            var column = new AliasTableColumn(alias, typeof(TTable), propInfo.Name);
+            var node = new ComparationNode(fistComparable, booleanOperator, column);
 
             SetNode(node);
         }

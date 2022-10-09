@@ -6,9 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FS.Query.Settings.Caching
+namespace FS.Query.Scripts.SelectionScripts
 {
-    public struct CacheKey
+    public struct SelectionCacheKey
     {
         private readonly ISource source;
         private readonly IEnumerable<Combination> combinations;
@@ -17,7 +17,7 @@ namespace FS.Query.Settings.Caching
         private readonly long limit;
         private readonly int hashCode;
 
-        public CacheKey(
+        public SelectionCacheKey(
             ISource source,
             IEnumerable<Combination> combinations,
             IEnumerable<Select> selectColumns,
@@ -34,7 +34,7 @@ namespace FS.Query.Settings.Caching
 
         public override bool Equals(object? obj)
         {
-            if (obj is null || obj is not CacheKey cacheKey || cacheKey.source != source || cacheKey.limit != limit) return false;
+            if (obj is null || obj is not SelectionCacheKey cacheKey || cacheKey.source != source || cacheKey.limit != limit) return false;
 
             return
                 combinations.SequenceEqual(cacheKey.combinations) &&
@@ -55,7 +55,7 @@ namespace FS.Query.Settings.Caching
             return hash;
         }
 
-        public static bool operator ==(CacheKey left, CacheKey right) => left.Equals(right);
-        public static bool operator !=(CacheKey left, CacheKey right) => !(left == right);
+        public static bool operator ==(SelectionCacheKey left, SelectionCacheKey right) => left.Equals(right);
+        public static bool operator !=(SelectionCacheKey left, SelectionCacheKey right) => !(left == right);
     }
 }

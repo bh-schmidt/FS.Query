@@ -20,13 +20,13 @@ namespace FS.Query.Scripts.SelectionScripts.Filters.Comparables
         public DbType? DbType { get; set; }
         public Type Type { get; }
 
-        public override object BuildAsString(DbSettings dbSettings) => dbSettings.TypeMapping.ToSql(Type, value);
+        public override object BuildAsString(DbSettings dbSettings) => dbSettings.TypeMapping.MapToSql(Type, value);
 
         public void AddParameter(string parameterName, IDbDataParameter dbDataParameter, DbSettings dbSettings)
         {
             dbDataParameter.ParameterName = parameterName;
             dbDataParameter.Value = value;
-            dbDataParameter.DbType = DbType ??= dbSettings.TypeMapping.GetDbType(Type).DbType;
+            dbDataParameter.DbType = DbType ??= dbSettings.TypeMapping.GetTypeMap(Type).DbType;
         }
 
         public override bool Equals(object? obj) => obj is ComparableValue value && EqualityComparer<Type>.Default.Equals(Type, value.Type);

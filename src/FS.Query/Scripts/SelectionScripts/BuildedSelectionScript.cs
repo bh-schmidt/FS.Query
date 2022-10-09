@@ -8,18 +8,18 @@ using System.Text;
 
 namespace FS.Query.Scripts.SelectionScripts
 {
-    public class BuildedScript
+    public class BuildedSelectionScript
     {
         private readonly string buildedScript;
 
-        public BuildedScript(
+        public BuildedSelectionScript(
             string buildedScript,
             Select[] selectColumns,
             ScriptParameters scriptParameters)
         {
             this.buildedScript = buildedScript;
             SelectColumns = selectColumns;
-            this.ScriptParameters = scriptParameters;
+            ScriptParameters = scriptParameters;
         }
 
         public Select[] SelectColumns { get; }

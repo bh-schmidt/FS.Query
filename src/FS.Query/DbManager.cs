@@ -1,4 +1,5 @@
-﻿using FS.Query.Builders;
+﻿using FS.Query.Builders.Scripts.InsertionScripts;
+using FS.Query.Builders.Scripts.SelectionScripts;
 using FS.Query.Helpers;
 using FS.Query.Scripts.SelectionScripts;
 using FS.Query.Scripts.SelectionScripts.Sources;
@@ -25,7 +26,7 @@ namespace FS.Query
 
         public SelectionByTableBuilder<TTable> FromTable<TTable>(string alias)
         {
-            var table = new Table(typeof(TTable), alias);
+            var table = new AliasTable(typeof(TTable), alias);
             var selectionScript = new SelectionScript(table);
             return new SelectionByTableBuilder<TTable>(table, selectionScript, this);
         }
@@ -35,6 +36,12 @@ namespace FS.Query
             var scriptInjection = new ScriptInjection(alias, injection);
             var selectionScript = new SelectionScript(scriptInjection);
             return new SelectionBuilder(scriptInjection, selectionScript, this);
+        }
+
+        public InsertionBuilder<TTable> Insert<TTable>()
+        {
+            var table = new Table(typeof(TTable));
+            return new InsertionBuilder<TTable>(table, this);
         }
 
         public IDbConnection Connection => dbConnection ??= CreateConnection();

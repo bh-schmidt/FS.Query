@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FS.Query.Scripts.Columns;
 
 namespace FS.Query.Scripts.SelectionScripts.Selects
 {
     public class Select
     {
-        private static readonly IEnumerable<IScriptColumn> emptyColumns = Enumerable.Empty<IScriptColumn>();
-        private IEnumerable<IScriptColumn>? columns;
+        private static readonly IEnumerable<IAliasColumn> emptyColumns = Enumerable.Empty<IAliasColumn>();
+        private IEnumerable<IAliasColumn>? columns;
 
         public Select(string tableAlias, bool selectEverything)
         {
@@ -15,13 +16,13 @@ namespace FS.Query.Scripts.SelectionScripts.Selects
             SelectEverything = selectEverything;
         }
 
-        public Select(string tableAlias, IEnumerable<IScriptColumn> columns)
+        public Select(string tableAlias, IEnumerable<IAliasColumn> columns)
         {
             TableAlias = tableAlias;
             this.columns = columns;
         }
 
-        public virtual IEnumerable<IScriptColumn> Columns => columns ??= emptyColumns;
+        public virtual IEnumerable<IAliasColumn> Columns => columns ??= emptyColumns;
         public virtual string TableAlias { get; }
         public virtual bool SelectEverything { get; }
         public virtual string[]? PropertyHierarchy { get; set; }

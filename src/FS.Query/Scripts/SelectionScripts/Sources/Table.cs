@@ -4,22 +4,19 @@ using System.Collections.Generic;
 
 namespace FS.Query.Scripts.SelectionScripts.Sources
 {
-    public class Table : Source, ITypedSource
+    public class Table
     {
-        public Table(Type type, string alias) : base(alias)
+        public Table(Type type)
         {
-            if (string.IsNullOrWhiteSpace(alias))
-                throw new ArgumentException($"'{nameof(alias)}' cannot be null or whitespace.", nameof(alias));
-
             Type = type;
         }
 
         public Type Type { get; }
 
-        public override object Build(DbSettings dbSettings)
+        public object Build(DbSettings dbSettings)
         {
             var map = dbSettings.MapCaching.GetOrCreate(Type, dbSettings);
-            return $"{map.TableFullName} {TreatedAlias}";
+            return map.TableFullName;
         }
 
         public override bool Equals(object? obj) =>

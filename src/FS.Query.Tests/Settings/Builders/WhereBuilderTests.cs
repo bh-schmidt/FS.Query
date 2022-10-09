@@ -30,7 +30,7 @@ namespace FS.Query.Tests.Settings.Builders
             selectionScript.SetupGet(e => e.Filters)
                 .Returns(comparations);
 
-            comparationBlock.Setup(e => e.Build(It.IsAny<DbSettings>()))
+            comparationBlock.Setup(e => e.BuildWithAlias(It.IsAny<DbSettings>()))
                 .Returns("{COMPARATION}");
 
             var result = whereBuilder.Build(It.IsAny<DbSettings>(), selectionScript.Object);
@@ -38,7 +38,7 @@ namespace FS.Query.Tests.Settings.Builders
             Assert.NotNull(result);
             Assert.AreEqual(" WHERE {COMPARATION}", result!.ToString());
             selectionScript.Verify(e => e.Filters, Times.Exactly(2));
-            comparationBlock.Verify(e => e.Build(It.IsAny<DbSettings>()), Times.Once);
+            comparationBlock.Verify(e => e.BuildWithAlias(It.IsAny<DbSettings>()), Times.Once);
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace FS.Query.Tests.Settings.Builders
             selectionScript.SetupGet(e => e.Filters)
                 .Returns(comparations);
 
-            comparationBlock.Setup(e => e.Build(It.IsAny<DbSettings>()))
+            comparationBlock.Setup(e => e.BuildWithAlias(It.IsAny<DbSettings>()))
                 .Returns("{COMPARATION}");
 
             var result = whereBuilder.Build(It.IsAny<DbSettings>(), selectionScript.Object);
@@ -59,7 +59,7 @@ namespace FS.Query.Tests.Settings.Builders
             Assert.NotNull(result);
             Assert.AreEqual(" WHERE {COMPARATION} AND {COMPARATION}", result!.ToString());
             selectionScript.Verify(e => e.Filters, Times.Exactly(2));
-            comparationBlock.Verify(e => e.Build(It.IsAny<DbSettings>()), Times.Exactly(2));
+            comparationBlock.Verify(e => e.BuildWithAlias(It.IsAny<DbSettings>()), Times.Exactly(2));
         }
 
         [Test]

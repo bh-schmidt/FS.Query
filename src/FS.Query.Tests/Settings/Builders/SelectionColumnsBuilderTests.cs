@@ -1,4 +1,5 @@
-﻿using FS.Query.Scripts.SelectionScripts;
+﻿using FS.Query.Scripts.Columns;
+using FS.Query.Scripts.SelectionScripts;
 using FS.Query.Scripts.SelectionScripts.Selects;
 using FS.Query.Settings;
 using FS.Query.Settings.Builders;
@@ -13,7 +14,7 @@ namespace FS.Query.Tests.Settings.Builders
         readonly SelectionColumnsBuilder selectionColumnsBuilder = new();
         Mock<SelectionScript> selectionScript = null!;
         Mock<Select> select = null!;
-        Mock<IScriptColumn> column = null!;
+        Mock<IAliasColumn> column = null!;
 
         [SetUp]
         public void Setup()
@@ -26,10 +27,10 @@ namespace FS.Query.Tests.Settings.Builders
         [Test]
         public void Will_build_the_columns()
         {
-            column.Setup(e => e.Build(It.IsAny<DbSettings>()))
+            column.Setup(e => e.BuildWithAlias(It.IsAny<DbSettings>()))
                 .Returns("{COLUMN}");
 
-            var columns = new LinkedList<IScriptColumn>();
+            var columns = new LinkedList<IAliasColumn>();
             columns.AddLast(column.Object);
 
             select.SetupGet(e => e.Columns)
@@ -45,7 +46,7 @@ namespace FS.Query.Tests.Settings.Builders
 
             Assert.NotNull(result);
             Assert.AreEqual(" {COLUMN}", result.ToString());
-            column.Verify(e => e.Build(It.IsAny<DbSettings>()), Times.Once);
+            column.Verify(e => e.BuildWithAlias(It.IsAny<DbSettings>()), Times.Once);
             select.Verify(e => e.Columns, Times.Once);
             selectionScript.Verify(e => e.Selects, Times.Exactly(2));
         }
@@ -53,10 +54,10 @@ namespace FS.Query.Tests.Settings.Builders
         [Test]
         public void Will_build_two_columns()
         {
-            column.Setup(e => e.Build(It.IsAny<DbSettings>()))
+            column.Setup(e => e.BuildWithAlias(It.IsAny<DbSettings>()))
                 .Returns("{COLUMN}");
 
-            var columns = new LinkedList<IScriptColumn>();
+            var columns = new LinkedList<IAliasColumn>();
             columns.AddLast(column.Object);
             columns.AddLast(column.Object);
 
@@ -73,7 +74,7 @@ namespace FS.Query.Tests.Settings.Builders
 
             Assert.NotNull(result);
             Assert.AreEqual(" {COLUMN}, {COLUMN}", result.ToString());
-            column.Verify(e => e.Build(It.IsAny<DbSettings>()), Times.Exactly(2));
+            column.Verify(e => e.BuildWithAlias(It.IsAny<DbSettings>()), Times.Exactly(2));
             select.Verify(e => e.Columns, Times.Once);
             selectionScript.Verify(e => e.Selects, Times.Exactly(2));
         }

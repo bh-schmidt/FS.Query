@@ -103,7 +103,7 @@ namespace FS.Query.Scripts.SelectionScripts.Combinations.Joins
             }
 
             if (expression is ConstantExpression constantExpression)
-                return dbSettings.TypeMapping.ToSql(constantExpression.Type, constantExpression.Value);
+                return dbSettings.TypeMapping.MapToSql(constantExpression.Type, constantExpression.Value);
 
             throw new InvalidExpressionException();
         }

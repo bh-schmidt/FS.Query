@@ -1,5 +1,5 @@
-﻿using FS.Query.Scripts.SelectionScripts.Filters.Comparables;
-using FS.Query.Settings;
+﻿using FS.Query.Settings;
+using FS.Query.Scripts.Columns;
 
 namespace FS.Query.Scripts.SelectionScripts.Operators
 {

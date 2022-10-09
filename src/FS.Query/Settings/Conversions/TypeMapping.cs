@@ -5,34 +5,25 @@ namespace FS.Query.Settings.Conversions
 {
     public class TypeMapping
     {
+        private static readonly Type EnumType = typeof(Enum);
         public Dictionary<Type, TypeMap> Map = DefaultTypeMap.GetMap();
 
-        public virtual TypeMap GetDbType(Type type)
+        public virtual TypeMap GetTypeMap(Type type)
         {
             if (Map.TryGetValue(type, out TypeMap? typeMap))
                 return typeMap;
 
+            if(EnumType.IsAssignableFrom(type))
+                return DefaultTypeMap.GetDefaultEnumMap(type);
+
             return DefaultTypeMap.GetDefaultMap(type);
         }
 
-        public object ToSql(Type type, object? value)
+        public object MapToSql(Type type, object? value)
         {
-            if (value is null)
-                return "NULL";
-
-            var typeMap = GetDbType(type);
+            var typeMap = GetTypeMap(type);
             var convertedValue = typeMap.ToDatabaseConversion(value);
             return convertedValue;
-        }
-
-        public object ToSqlWithCast(Type type, object? value)
-        {
-            if (value is null)
-                return "NULL";
-
-            var typeMap = GetDbType(type);
-            var convertedValue = typeMap.ToDatabaseConversion(value);
-            return $"CAST({convertedValue} AS {typeMap.DatabaseType})";
         }
     }
 }

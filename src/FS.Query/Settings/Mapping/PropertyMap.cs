@@ -34,19 +34,7 @@ namespace FS.Query.Settings.Mapping
 
         public virtual void Build(DbSettings dbSettings)
         {
-            dbType ??= dbSettings.TypeMapping.GetDbType(PropertyType).DbType;
-        }
-
-        public void SetValue(object obj, object value)
-        {
-            if (obj is null || value is null)
-                return;
-
-            var propInfo = obj.GetType().GetProperty(PropertyName);
-            if (propInfo is null)
-                throw new ArgumentException($"The object doesn't contains the property {PropertyName}.");
-
-            propInfo.SetValue(obj, value);
+            dbType ??= dbSettings.TypeMapping.GetTypeMap(PropertyType).DbType;
         }
     }
 }

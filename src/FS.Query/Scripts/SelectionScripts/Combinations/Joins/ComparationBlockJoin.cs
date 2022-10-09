@@ -20,7 +20,7 @@ namespace FS.Query.Scripts.SelectionScripts.Combinations.Joins
                 .Append("JOIN ")
                 .Append(SecondSource.Build(dbSettings))
                 .Append(" ON ")
-                .Append(comparationBlock.Build(dbSettings));
+                .Append(comparationBlock.BuildWithAlias(dbSettings));
         }
     }
 }

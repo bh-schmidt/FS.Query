@@ -5,7 +5,6 @@ using FS.Query.Scripts.SelectionScripts.Parameters;
 using FS.Query.Scripts.SelectionScripts.Selects;
 using FS.Query.Scripts.SelectionScripts.Sources;
 using FS.Query.Settings;
-using FS.Query.Settings.Caching;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -29,12 +28,12 @@ namespace FS.Query.Scripts.SelectionScripts
         public virtual ScriptParameters ScriptParameters => scriptParameters ??= new();
         public virtual long? Limit { get; set; }
 
-        public virtual BuildedScript Build(DbSettings dbSettings)
+        public virtual BuildedSelectionScript Build(DbSettings dbSettings)
         {
             var script = dbSettings.ScriptBuilder.Build(dbSettings, this);
-            return new BuildedScript(script, Selects.ToArray(), ScriptParameters);
+            return new BuildedSelectionScript(script, Selects.ToArray(), ScriptParameters);
         }
 
-        public virtual CacheKey GetKey() => new(From, Combinations.ToArray(), Selects.ToArray(), Filters.ToArray(), Limit ?? 0);
+        public virtual SelectionCacheKey GetKey() => new(From, Combinations.ToArray(), Selects.ToArray(), Filters.ToArray(), Limit ?? 0);
     }
 }

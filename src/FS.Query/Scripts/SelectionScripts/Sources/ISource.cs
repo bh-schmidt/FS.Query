@@ -8,5 +8,7 @@ namespace FS.Query.Scripts.SelectionScripts.Sources
         string TreatedAlias { get; }
 
         object Build(DbSettings dbSettings);
+
+        static string TreatAlias(string alias) => $"[{alias}]";
     }
 }

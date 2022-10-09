@@ -1,5 +1,5 @@
-﻿using FS.Query.Scripts.SelectionScripts.Filters.Comparables;
-using FS.Query.Settings;
+﻿using FS.Query.Settings;
+using FS.Query.Scripts.Columns;
 
 namespace FS.Query.Scripts.SelectionScripts.Operators
 {
@@ -13,6 +13,6 @@ namespace FS.Query.Scripts.SelectionScripts.Operators
         public string Operator { get; }
 
         public override object Build(DbSettings dbSettings, ISqlComparable first, ISqlComparable second) =>
-            $"{first.Build(dbSettings)} {Operator} {second.Build(dbSettings)}";
+            $"{first.BuildWithAlias(dbSettings)} {Operator} {second.BuildWithAlias(dbSettings)}";
     }
 }

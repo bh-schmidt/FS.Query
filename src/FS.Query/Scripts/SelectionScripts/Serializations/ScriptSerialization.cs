@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using FS.Query.Scripts.Columns;
 
 namespace FS.Query.Scripts.SelectionScripts.Serializations
 {
@@ -37,7 +38,7 @@ namespace FS.Query.Scripts.SelectionScripts.Serializations
                     lastHierarchy = columnSerialization.BuildedHierarchy;
                 }
 
-                columnSerialization.PropertyMap.SetValue(hierachyObject, value);
+                columnSerialization.SetValue(hierachyObject, value);
             }
         }
 
@@ -47,9 +48,9 @@ namespace FS.Query.Scripts.SelectionScripts.Serializations
             IDataReader reader,
             DbSettings dbSettings)
         {
-            var columns = selects.SelectMany(e => e.Columns).ToArray();
-            var addedCollumns = new HashSet<IScriptColumn>(columns.Length);
-            LinkedList<IScriptColumn> newColumns = new();
+            var columns = selects.SelectMany(e => e.Columns).OfType<IColumn>().ToArray();
+            var addedCollumns = new HashSet<IColumn>(columns.Length);
+            LinkedList<IColumn> newColumns = new();
 
             for (int i = 0; i < reader.FieldCount; i++)
             {
@@ -58,7 +59,7 @@ namespace FS.Query.Scripts.SelectionScripts.Serializations
 
                 if (column is null)
                 {
-                    column = new NamedColumn(columnName);
+                    column = new Column(columnName);
                     newColumns.AddLast(column);
                 }
                 else

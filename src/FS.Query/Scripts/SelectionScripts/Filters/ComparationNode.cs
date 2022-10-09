@@ -4,6 +4,7 @@ using FS.Query.Settings;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FS.Query.Scripts.Columns;
 
 namespace FS.Query.Scripts.SelectionScripts.Filters
 {
@@ -54,7 +55,7 @@ namespace FS.Query.Scripts.SelectionScripts.Filters
 
         private void SetDbType()
         {
-            if (Second is ComparableValue comparableValue && First is TableProperty tableProperty)
+            if (Second is ComparableValue comparableValue && First is TableColumn tableProperty)
                 comparableValue.DbType = tableProperty.DbType;
         }
     }

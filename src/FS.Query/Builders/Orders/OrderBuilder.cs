@@ -4,6 +4,7 @@ using FS.Query.Scripts.SelectionScripts.Filters;
 using FS.Query.Scripts.SelectionScripts.Orders;
 using System;
 using System.Linq.Expressions;
+using FS.Query.Scripts.Columns;
 
 namespace FS.Query.Builders.Orders
 {
@@ -19,8 +20,8 @@ namespace FS.Query.Builders.Orders
         public OrderBuilder Column<TTable>(string tableAlias, Expression<Func<TTable, object?>> property, bool descending = false)
         {
             var propertyInfo = property.GetPropertyInfo();
-            var tableProperty = new TableProperty(tableAlias, typeof(TTable), propertyInfo.Name);
-            var columnOrder = new ColumnOrder(tableProperty, descending);
+            var column = new AliasTableColumn(tableAlias, typeof(TTable), propertyInfo.Name);
+            var columnOrder = new ColumnOrder(column, descending);
             selectionScript.Orders.AddLast(columnOrder);
             return this;
         }

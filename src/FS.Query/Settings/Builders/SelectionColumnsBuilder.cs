@@ -29,7 +29,7 @@ namespace FS.Query.Settings.Builders
                     if (addComma) stringBuilder.Append(", ");
                     else addComma = true;
 
-                    stringBuilder.Append(column.Build(dbSettings));
+                    stringBuilder.Append(column.BuildWithAlias(dbSettings));
                 }
             }
 

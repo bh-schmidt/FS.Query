@@ -7,6 +7,7 @@ using FS.Query.Settings;
 using FS.Query.Tests.Shared;
 using Moq;
 using NUnit.Framework;
+using FS.Query.Scripts.Columns;
 
 namespace FS.Query.Tests.Builders.Filters
 {
@@ -28,7 +29,7 @@ namespace FS.Query.Tests.Builders.Filters
             fistComparable = new();
             comparationNode = new(null, null, null);
 
-            fistComparable.Setup(e => e.Build(It.IsAny<DbSettings>()));
+            fistComparable.Setup(e => e.BuildWithAlias(It.IsAny<DbSettings>()));
 
             equalityBuilder = new(selectionScript.Object, comparationBlockBuilder.Object, logicalConnectiveBuilder.Object, fistComparable.Object);
         }
@@ -81,7 +82,7 @@ namespace FS.Query.Tests.Builders.Filters
             Assert.AreEqual(fistComparable.Object, lastNode.First);
             Assert.AreEqual(Operator.Equal, lastNode.Operator);
             Assert.NotNull(lastNode.Second);
-            Assert.IsInstanceOf<TableProperty>(lastNode.Second);
+            Assert.IsInstanceOf<AliasTableColumn>(lastNode.Second);
         }
 
         [Test]
@@ -115,7 +116,7 @@ namespace FS.Query.Tests.Builders.Filters
             Assert.AreEqual(fistComparable.Object, lastNode.First);
             Assert.AreEqual(Operator.NotEqual, lastNode.Operator);
             Assert.NotNull(lastNode.Second);
-            Assert.IsInstanceOf<TableProperty>(lastNode.Second);
+            Assert.IsInstanceOf<AliasTableColumn>(lastNode.Second);
         }
 
         [Test]
@@ -149,7 +150,7 @@ namespace FS.Query.Tests.Builders.Filters
             Assert.AreEqual(fistComparable.Object, lastNode.First);
             Assert.AreEqual(Operator.GreaterThan, lastNode.Operator);
             Assert.NotNull(lastNode.Second);
-            Assert.IsInstanceOf<TableProperty>(lastNode.Second);
+            Assert.IsInstanceOf<AliasTableColumn>(lastNode.Second);
         }
 
         [Test]
@@ -183,7 +184,7 @@ namespace FS.Query.Tests.Builders.Filters
             Assert.AreEqual(fistComparable.Object, lastNode.First);
             Assert.AreEqual(Operator.GreaterThanOrEqual, lastNode.Operator);
             Assert.NotNull(lastNode.Second);
-            Assert.IsInstanceOf<TableProperty>(lastNode.Second);
+            Assert.IsInstanceOf<AliasTableColumn>(lastNode.Second);
         }
 
         [Test]
@@ -217,7 +218,7 @@ namespace FS.Query.Tests.Builders.Filters
             Assert.AreEqual(fistComparable.Object, lastNode.First);
             Assert.AreEqual(Operator.LessThan, lastNode.Operator);
             Assert.NotNull(lastNode.Second);
-            Assert.IsInstanceOf<TableProperty>(lastNode.Second);
+            Assert.IsInstanceOf<AliasTableColumn>(lastNode.Second);
         }
 
         [Test]
@@ -251,7 +252,7 @@ namespace FS.Query.Tests.Builders.Filters
             Assert.AreEqual(fistComparable.Object, lastNode.First);
             Assert.AreEqual(Operator.LessThanOrEqual, lastNode.Operator);
             Assert.NotNull(lastNode.Second);
-            Assert.IsInstanceOf<TableProperty>(lastNode.Second);
+            Assert.IsInstanceOf<AliasTableColumn>(lastNode.Second);
         }
 
         [Test]

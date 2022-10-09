@@ -27,7 +27,7 @@ namespace FS.Query.Tests.Settings.Builders
             var orders = new LinkedList<ColumnOrder>();
             orders.AddLast(columnOrder.Object);
 
-            columnOrder.Setup(e => e.ScriptColumn.Build(It.IsAny<DbSettings>()))
+            columnOrder.Setup(e => e.ScriptColumn.BuildWithAlias(It.IsAny<DbSettings>()))
                 .Returns("ID");
 
             selectionScript.Setup(e => e.Orders)
@@ -37,7 +37,7 @@ namespace FS.Query.Tests.Settings.Builders
 
             Assert.NotNull(result);
             Assert.AreEqual(" ORDER BY ID", result!.ToString());
-            columnOrder.Verify(e => e.ScriptColumn.Build(It.IsAny<DbSettings>()), Times.Once);
+            columnOrder.Verify(e => e.ScriptColumn.BuildWithAlias(It.IsAny<DbSettings>()), Times.Once);
             selectionScript.Verify(e => e.Orders, Times.Exactly(2));
         }
 
@@ -52,7 +52,7 @@ namespace FS.Query.Tests.Settings.Builders
                 .Returns(false)
                 .Returns(true);
 
-            columnOrder.SetupSequence(e => e.ScriptColumn.Build(It.IsAny<DbSettings>()))
+            columnOrder.SetupSequence(e => e.ScriptColumn.BuildWithAlias(It.IsAny<DbSettings>()))
                 .Returns("ID")
                 .Returns("NAME");
 
@@ -63,7 +63,7 @@ namespace FS.Query.Tests.Settings.Builders
 
             Assert.NotNull(result);
             Assert.AreEqual(" ORDER BY ID, NAME DESC", result!.ToString());
-            columnOrder.Verify(e => e.ScriptColumn.Build(It.IsAny<DbSettings>()), Times.Exactly(2));
+            columnOrder.Verify(e => e.ScriptColumn.BuildWithAlias(It.IsAny<DbSettings>()), Times.Exactly(2));
             selectionScript.Verify(e => e.Orders, Times.Exactly(2));
         }
 

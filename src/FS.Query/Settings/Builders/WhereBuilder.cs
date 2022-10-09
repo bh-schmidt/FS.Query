@@ -20,7 +20,7 @@ namespace FS.Query.Settings.Builders
             int index = 0;
             foreach (var filter in filters)
             {
-                var blockBuilder = filter.Build(dbSettings);
+                var blockBuilder = filter.BuildWithAlias(dbSettings);
                 builder.Append(blockBuilder);
 
                 if (++index < filters.Length)

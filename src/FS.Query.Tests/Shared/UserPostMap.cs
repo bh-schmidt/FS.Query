@@ -6,10 +6,10 @@ namespace FS.Query.Tests.Shared
     {
         public UserPostMap()
         {
-            TableName("USER_POST");
+            TableName("User_Post");
 
             Property(t => t.Id);
-            Property(t => t.UserId).WithName("USER_ID");
+            Property(t => t.UserId).WithName("User_Id");
             Property(t => t.Post);
         }
     }

@@ -1,6 +1,6 @@
 ﻿using FS.Query.Scripts.SelectionScripts.Filters;
-using FS.Query.Scripts.SelectionScripts.Filters.Comparables;
 using FS.Query.Settings;
+using FS.Query.Scripts.Columns;
 
 namespace FS.Query.Scripts.SelectionScripts.Parameters
 {
@@ -16,7 +16,7 @@ namespace FS.Query.Scripts.SelectionScripts.Parameters
             IsConstant = isConstant;
         }
 
-        public object Build(DbSettings dbSettings)
+        public object BuildWithAlias(DbSettings dbSettings)
         {
             if (IsConstant || GetType() == typeof(ComparationBlock))
                 return BuildAsString(dbSettings);

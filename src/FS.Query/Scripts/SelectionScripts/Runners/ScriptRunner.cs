@@ -10,10 +10,10 @@ namespace FS.Query.Scripts.SelectionScripts.Runners
 {
     public class ScriptRunner<T>
     {
-        private readonly BuildedScript buildedScript;
+        private readonly BuildedSelectionScript buildedScript;
         private readonly DbManager databaseManager;
 
-        public ScriptRunner(BuildedScript buildedScript, DbManager databaseManager)
+        public ScriptRunner(BuildedSelectionScript buildedScript, DbManager databaseManager)
         {
             this.buildedScript = buildedScript;
             this.databaseManager = databaseManager;
@@ -21,7 +21,6 @@ namespace FS.Query.Scripts.SelectionScripts.Runners
 
         public T[] GetArray()
         {
-
             var connection = databaseManager.Connection;
             var command = buildedScript.PrepareCommand(databaseManager.DbSettings, buildedScript.ScriptParameters, connection);
 

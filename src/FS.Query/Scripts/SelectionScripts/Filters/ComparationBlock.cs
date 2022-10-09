@@ -1,8 +1,8 @@
-﻿using FS.Query.Scripts.SelectionScripts.Filters.Comparables;
-using FS.Query.Settings;
+﻿using FS.Query.Settings;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FS.Query.Scripts.Columns;
 
 namespace FS.Query.Scripts.SelectionScripts.Filters
 {
@@ -10,7 +10,7 @@ namespace FS.Query.Scripts.SelectionScripts.Filters
     {
         public ComparationNode? ComparationNode { get; set; }
 
-        public virtual object Build(DbSettings dbSettings)
+        public virtual object BuildWithAlias(DbSettings dbSettings)
         {
             if (ComparationNode is null)
                 throw new ArgumentException("The comparation block can't be empty.");

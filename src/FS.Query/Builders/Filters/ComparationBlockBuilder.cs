@@ -3,6 +3,7 @@ using FS.Query.Scripts.SelectionScripts;
 using FS.Query.Scripts.SelectionScripts.Filters;
 using System;
 using System.Linq.Expressions;
+using FS.Query.Scripts.Columns;
 
 namespace FS.Query.Builders.Filters
 {
@@ -34,8 +35,8 @@ namespace FS.Query.Builders.Filters
         public EqualityBuilder Column<TTable>(string tableAlias, Expression<Func<TTable, object?>> getProperty)
         {
             var propInfo = getProperty.GetPropertyInfo();
-            var property = new TableProperty(tableAlias, typeof(TTable), propInfo.Name);
-            return new EqualityBuilder(selectionScript, this, LogicalConnective, property);
+            var column = new AliasTableColumn(tableAlias, typeof(TTable), propInfo.Name);
+            return new EqualityBuilder(selectionScript, this, LogicalConnective, column);
         }
     }
 }

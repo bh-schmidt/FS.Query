@@ -43,7 +43,7 @@ namespace FS.Query.Scripts.SelectionScripts.Filters.Comparables
                     continue;
                 }
 
-                var conversion = dbSettings.TypeMapping.ToSql(value.GetType(), value);
+                var conversion = dbSettings.TypeMapping.MapToSql(value.GetType(), value);
                 builder.Append(conversion);
             }
 

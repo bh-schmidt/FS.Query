@@ -21,7 +21,7 @@ namespace FS.Query.Settings.Builders
                 else
                     addComma = true;
 
-                builder.Append(order.ScriptColumn.Build(dbSettings));
+                builder.Append(order.ScriptColumn.BuildWithAlias(dbSettings));
 
                 if (order.Descending)
                     builder.Append(" DESC");

@@ -1,10 +1,10 @@
 ﻿using FS.Query.Helpers.Extensions;
 using FS.Query.Scripts.SelectionScripts;
-using FS.Query.Scripts.SelectionScripts.Filters;
 using FS.Query.Scripts.SelectionScripts.Selects;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using FS.Query.Scripts.Columns;
 
 namespace FS.Query.Builders.Selections
 {
@@ -21,13 +21,13 @@ namespace FS.Query.Builders.Selections
         public SerializeBuilder<T> Columns<TTable>(string tableAlias, params Expression<Func<TTable, object?>>[] expressions)
         {
             var propertyHierarchy = new List<Select>(expressions.Length);
-            var scriptColumns = new LinkedList<IScriptColumn>();
+            var scriptColumns = new LinkedList<IAliasColumn>();
 
             for (int i = 0; i < expressions.Length; i++)
             {
                 var expression = expressions[i];
                 var propertyInfo = expression.GetPropertyInfo();
-                var column = new TableProperty(tableAlias, typeof(TTable), propertyInfo.Name);
+                var column = new AliasTableColumn(tableAlias, typeof(TTable), propertyInfo.Name);
                 scriptColumns.AddLast(column);
             }
 

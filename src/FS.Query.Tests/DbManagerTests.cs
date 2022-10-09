@@ -1,4 +1,4 @@
-﻿using FS.Query.Builders;
+﻿using FS.Query.Builders.Scripts.SelectionScripts;
 using FS.Query.Settings;
 using FS.Query.Tests.Shared;
 using Moq;
@@ -14,7 +14,7 @@ namespace FS.Query.Tests
         Mock<IServiceProvider> serviceProvider = null!;
         Mock<IDbConnection> dbConnection = null!;
         Mock<Connection> connection = null!;
-        Mock<Func<IServiceProvider, IDbConnection>> createConnectionMock;
+        Mock<Func<IServiceProvider, IDbConnection>> createConnectionMock = null!;
         DbManager dbManager = null!;
 
         [SetUp]

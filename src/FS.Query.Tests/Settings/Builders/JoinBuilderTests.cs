@@ -16,16 +16,16 @@ namespace FS.Query.Tests.Settings.Builders
 {
     public class JoinBuilderTests
     {
-        Mock<Table> userTable = null!;
-        Mock<Table> postTable = null!;
+        Mock<AliasTable> userTable = null!;
+        Mock<AliasTable> postTable = null!;
         Mock<SelectionScript> selectionScript = null!;
         Mock<ExpressionJoin> expressionJoin = null!;
 
         [SetUp]
         public void Setup()
         {
-            userTable = new Mock<Table>(typeof(User), "user");
-            postTable = new Mock<Table>(typeof(UserPost), "post");
+            userTable = new Mock<AliasTable>(typeof(User), "user");
+            postTable = new Mock<AliasTable>(typeof(UserPost), "post");
             selectionScript = new Mock<SelectionScript>(userTable.Object);
         }
 
